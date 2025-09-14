@@ -1,10 +1,13 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
-from . import views   # import the module, so we can do views.register
+from . import views  # keep your other imports
+from .admin_view import admin_view
+from .librarian_view import librarian_view
+from .member_view import member_view
 
 urlpatterns = [
-    # your other URLs
-    path('login/', auth_views.LoginView.as_view(template_name='relationship_app/login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(template_name='relationship_app/logout.html'), name='logout'),
-    path('register/', views.register, name='register'),  # <-- this line has views.register
+    # … your previous URLs here …
+
+    path('admin-only/', admin_view, name='admin_view'),
+    path('librarian-only/', librarian_view, name='librarian_view'),
+    path('member-only/', member_view, name='member_view'),
 ]
