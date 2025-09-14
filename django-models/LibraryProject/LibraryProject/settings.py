@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'bookshelf',
     'relationship_app',
+    
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'LibraryProject.urls'
+LOGIN_REDIRECT_URL = 'list_books'    # or whichever view to redirect after login
+LOGOUT_REDIRECT_URL = 'login'        # optional, after logout
 
 TEMPLATES = [
     {
