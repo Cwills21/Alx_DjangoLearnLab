@@ -1,7 +1,12 @@
-my_book.delete()
-(1, {'bookshelf.Book': 1})
+from bookshelf.models import Book
 
-<!-- Book Deleted Successfully -->
+# Delete the book
 
-print(Book.objects.all())
-<QuerySet []>
+book_to_delete = Book.objects.get(id=book.id)
+book_to_delete.delete()
+
+# Confirm deletion
+
+Book.objects.all()
+
+# Expected output: <QuerySet []>

@@ -1,4 +1,9 @@
-book=Book(title="1984",author="George Orwell",publication_year=1949)
-book.save()
+from bookshelf.models import Book
 
-<!-- "Book 1984 Added succesfully" -->
+# Create a Book instance
+
+book = Book.objects.create(title="1984", author="George Orwell", publication_year=1949)
+
+# Expected output: <Book: 1984 by George Orwell> (object created)
+
+book

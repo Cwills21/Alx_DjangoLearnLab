@@ -1,4 +1,9 @@
-my_book = Book.objects.get(id=book.id)
-print(my_book.title, my_book.author, my_book.publication_year)
+from bookshelf.models import Book
 
-<!-- 1984 George Orwell 1949 -->
+# Retrieve the book you created
+
+retrieved_book = Book.objects.get(id=book.id)
+
+# Expected output: shows title='1984', author='George Orwell', publication_year=1949
+
+retrieved_book.title, retrieved_book.author, retrieved_book.publication_year

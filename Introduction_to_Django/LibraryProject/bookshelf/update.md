@@ -1,3 +1,14 @@
-my_book.title="Nineteen Eighty-Four"
+from bookshelf.models import Book
 
-<!-- 1984 updated to Nineteen Eighty-Four  -->
+# Retrieve the book again
+
+book_to_update = Book.objects.get(id=book.id)
+
+# Update the title
+
+book_to_update.title = "Nineteen Eighty-Four"
+book_to_update.save()
+
+# Expected output: updated title
+
+book_to_update.title
