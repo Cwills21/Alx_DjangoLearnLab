@@ -1,25 +1,13 @@
 # bookshelf/views.py
-from django.shortcuts import render, get_object_or_404
-from .models import Book
-from .forms import BookForm
+from django.shortcuts import render
+from .forms import ExampleForm
 
-def book_list(request):
-    # Safe ORM query, no raw SQL
-    books = Book.objects.all()
-    return render(request, 'bookshelf/book_list.html', {'books': books})
-
-def book_search(request):
-    query = request.GET.get('q', '')
-    # Safe filter, no injection risk
-    books = Book.objects.filter(title__icontains=query)
-    return render(request, 'bookshelf/book_list.html', {'books': books, 'query': query})
-
-def book_create(request):
+def example_view(request):
     if request.method == 'POST':
-        form = BookForm(request.POST)
-        if form.is_valid():  # validates and cleans data
-            form.save()
-            # redirect or render success
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # do something with form.cleaned_data
+            pass
     else:
-        form = BookForm()
+        form = ExampleForm()
     return render(request, 'bookshelf/form_example.html', {'form': form})
