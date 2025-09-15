@@ -1,0 +1,42 @@
+{% extends "base.html" %} {% load static %} {% block content %}
+<h1>Books</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Published Date</th>
+      {% if perms.bookshelf.can_edit or perms.bookshelf.can_delete %}
+      <th>Actions</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for book in books %}
+    <tr>
+      <td>{{ book.title }}</td>
+      <td>{{ book.author }}</td>
+      <td>{{ book.published_date }}</td>
+
+      {% if perms.bookshelf.can_edit or perms.bookshelf.can_delete %}
+      <td>
+        {% if perms.bookshelf.can_edit %}
+        <a href="{% url 'bookshelf:edit_book' book.id %}">Edit</a>
+        {% endif %} {% if perms.bookshelf.can_delete %}
+        <a href="{% url 'bookshelf:delete_book' book.id %}">Delete</a>
+        {% endif %}
+      </td>
+      {% endif %}
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="4">No books available.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% if perms.bookshelf.can_create %}
+<p><a href="{% url 'bookshelf:add_book' %}">Add New Book</a></p>
+{% endif %} {% endblock %}
