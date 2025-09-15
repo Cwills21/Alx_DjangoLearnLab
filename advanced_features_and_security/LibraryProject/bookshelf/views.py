@@ -1,26 +1,25 @@
 # bookshelf/views.py
 from django.shortcuts import render, get_object_or_404
-from django.contrib.auth.decorators import permission_required
 from .models import Book
+from .forms import BookForm
 
-@permission_required('bookshelf.can_view', raise_exception=True)
 def book_list(request):
+    # Safe ORM query, no raw SQL
     books = Book.objects.all()
     return render(request, 'bookshelf/book_list.html', {'books': books})
 
-@permission_required('bookshelf.can_create', raise_exception=True)
+def book_search(request):
+    query = request.GET.get('q', '')
+    # Safe filter, no injection risk
+    books = Book.objects.filter(title__icontains=query)
+    return render(request, 'bookshelf/book_list.html', {'books': books, 'query': query})
+
 def book_create(request):
-    # handle form for creating a book
-    ...
-
-@permission_required('bookshelf.can_edit', raise_exception=True)
-def book_edit(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    # handle form for editing book
-    ...
-
-@permission_required('bookshelf.can_delete', raise_exception=True)
-def book_delete(request, pk):
-    book = get_object_or_404(Book, pk=pk)
-    book.delete()
-    ...
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():  # validates and cleans data
+            form.save()
+            # redirect or render success
+    else:
+        form = BookForm()
+    return render(request, 'bookshelf/form_example.html', {'form': form})

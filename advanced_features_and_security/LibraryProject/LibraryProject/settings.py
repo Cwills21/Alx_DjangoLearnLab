@@ -9,6 +9,17 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
+# Security Measures
+
+- DEBUG=False and ALLOWED_HOSTS set to production domains.
+- Browser XSS filter and no-sniff headers enabled.
+- CSRF and session cookies forced over HTTPS.
+- X_FRAME_OPTIONS='DENY' to prevent clickjacking.
+- All forms include `{% csrf_token %}`.
+- ORM queries used to prevent SQL injection.
+- Input validated with Django forms.
+- Content Security Policy headers applied using django-csp middleware.
+
 
 from pathlib import Path
 
@@ -127,3 +138,37 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# LibraryProject/settings.py
+
+DEBUG = False  # Never True in production
+
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # adjust to your server domain/IP
+
+# Browser XSS filter & no-sniff headers
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Clickjacking protection
+X_FRAME_OPTIONS = 'DENY'  # or 'SAMEORIGIN' if you use iframes internally
+
+# Ensure cookies only over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+# (Optional) HSTS to enforce HTTPS:
+SECURE_HSTS_SECONDS = 31536000  # 1 year
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+SECURE_HSTS_PRELOAD = True
+
+INSTALLED_APPS += ['csp']
+
+MIDDLEWARE.insert(0, 'csp.middleware.CSPMiddleware')  # must be early
+
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", 'https://trusted.cdn.com')  # add allowed script domains
+CSP_STYLE_SRC = ("'self'", 'https://trusted.cdn.com')   # add allowed CSS domains
+MIDDLEWARE = [
+    # ...
+    'LibraryProject.middleware.CSPMiddleware',
+]
