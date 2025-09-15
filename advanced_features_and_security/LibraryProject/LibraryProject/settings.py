@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'bookshelf',
     'relationship_app',
     'accounts',
+    'csp',
     
 ]
 
@@ -149,17 +150,27 @@ ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # adjust to your serve
 SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 
+# 🔐 Security-related headers
+X_FRAME_OPTIONS = 'DENY'  # protect against clickjacking
+SECURE_CONTENT_TYPE_NOSNIFF = True  # prevent MIME-type sniffing
+
+# (Older Django had SECURE_BROWSER_XSS_FILTER, removed in Django 4+
+# Instead use Content Security Policy (CSP) or custom middleware)
 # Clickjacking protection
 X_FRAME_OPTIONS = 'DENY'  # or 'SAMEORIGIN' if you use iframes internally
 
 # Ensure cookies only over HTTPS
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-
 # (Optional) HSTS to enforce HTTPS:
 SECURE_HSTS_SECONDS = 31536000  # 1 year
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# 🔐 Enforce HTTPS everywhere
+SECURE_SSL_REDIRECT = True  # Redirect all HTTP to HTTPS
+
 
 INSTALLED_APPS += ['csp']
 
@@ -172,3 +183,6 @@ MIDDLEWARE = [
     # ...
     'LibraryProject.middleware.CSPMiddleware',
 ]
+
+# Example CSP policy
+# CSP_STYLE_SRC = ("'self'", 'https://fonts.googleapis.com')
